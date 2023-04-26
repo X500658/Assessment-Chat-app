@@ -2,9 +2,9 @@ import mysql from 'mysql'
 
 const connection = mysql.createConnection({
     host: '10.10.10.15', 
-    user: 'hapi-buy-and-sell',
-    password: 'rddh1kW-jBcOWL99',
-    database: 'buy-and-sell'
+    user: 'chat-app-user',
+    password: 'Z0m[ME]dZ.ELycK9',
+    database: 'chat_app'
 })
 
 export const db = {

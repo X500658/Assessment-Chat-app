@@ -1,16 +1,17 @@
-<div class="col-5">
-    <div class="row">
-        <input #searchBox id="search-box" (input)="search(searchBox.value)" placeholder="Search for ChatBuddy" />
+<div class="p-1">
+    <div class="row mb-2">
+        <input #searchBox class="form-control form-control-lg rounded-pill" id="buddy-search-box" (input)="search(searchBox.value)" placeholder="Search for ChatBuddy or Room" />
     </div>
-    <div class="row bg-light border border-dark text-dark" *ngFor="let buddy of buddies$ | async">
+    <div class="row bg-light border border-dark text-dark" *ngFor="let buddy of buddies">
         <a class="row" style="color: black; text-decoration: none;" routerLink="/room">
             <div class="col-2">
                 <img src="https://i.imgur.com/{{buddy.pic}}" height="60" alt="{{buddy.name}}"> 
             </div>
             <div class="col-10">
-                <h4>{{buddy.name}}</h4>
-                <h6 *ngIf="buddy.online" style="color: green; font-weight: bold;">Online: {{buddy.online}}</h6>
+                <h4 class="text-truncate">{{buddy.name}}</h4>
+                <h6 *ngIf="buddy.is_online" style="color: green; font-weight: bold;">Online</h6>
+                <h6 *ngIf="!buddy.is_online">Last online: {{buddy.last_online}}</h6>
             </div>
         </a>
-      </div>
+    </div>
 </div>

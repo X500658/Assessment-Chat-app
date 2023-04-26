@@ -1,0 +1,20 @@
+<div class="p-1">
+    <h1 class="bg-light text-center text-dark mb-2 rounded-pill">Messages</h1>
+    <div class="row bg-light border border-dark text-dark" *ngFor="let room of rooms">
+        <a class="row" style="color: black; text-decoration: none;" routerLink="/room/{{room.id}}">
+            <div class="col-2">
+                <img src="https://i.imgur.com/{{room.pic}}" height="60" alt="{{room.name}}"> 
+            </div>
+            <div class="col-10">
+                <h4 class="row">
+                    <span class="text-truncate" [ngClass]="room?.other_members!=undefined && room?.other_members?.length! > 1?'col-8':''">{{room.name}}</span>
+                    <span class="col-4" *ngIf="room?.other_members!=undefined && room?.other_members?.length! > 1">{{room?.other_members?.length}} buddies</span>
+                </h4>
+                <h6 class="row">
+                    <span class="col-8 text-truncate">{{room?.last_message?.sender?.name}}: {{room?.last_message?.content}}</span>
+                    <span class="col-4">{{room?.last_message?.time_sent}}</span>
+                </h6>
+            </div>
+        </a>
+    </div>
+</div>
