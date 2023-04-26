@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import {
-   debounceTime, distinctUntilChanged, switchMap
- } from 'rxjs/operators';
  import { User, Room } from '../types';
  import { UserService } from '../service/users.service'
 
@@ -12,23 +8,22 @@ import {
   styleUrls: ['./chatlsit.component.css']
 })
 
-export class ChatlsitComponent {
-  buddies$!: Observable<User[]>;
-  rooms$!: Observable<Room[]>;
-  private searchTerms = new Subject<string>();
+export class ChatlsitComponent implements OnInit {
+  buddies: User[] = []
+  // private searchTerms = new Subject<string>();
 
   constructor(private userService: UserService) {}
 
   search(term: string): void {
-    this.searchTerms.next(term);
+  //   // this.searchTerms.next(term);
+    console.log("tes")
   }
 
   ngOnInit(): void {
-    this.buddies$ = this.userService.getUsers()
-    // this.searchTerms.pipe(
-    //   debounceTime(300),
-    //   distinctUntilChanged(),
-    //   switchMap((term: string) => this.userService.searchUsers(term)),
-    // );
+    this.getBuddies()
+  }
+
+  getBuddies(): void {
+    this.buddies = this.userService.getBuddies2()
   }
 }

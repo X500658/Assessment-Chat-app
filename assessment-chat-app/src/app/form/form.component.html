@@ -1,0 +1,16 @@
+<div class="bg-light text-dark rounded-3 p-3">
+    <h2 class="w-100 text-center">{{formTitle}}</h2>
+    <form class="row g-2 m-3" (ngSubmit)="onButtonClick">
+        <div class="col-12">
+            <label class="form-label" for="Username">Username - {{name}}</label>
+            <input class="form-control" type="text" placeholder="Username" name="Username" [(ngModel)]="name" required>
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="Password">Password - {{password}}</label>
+            <input class="form-control" type="password" placeholder="Password" name="Password" [(ngModel)]="password" required>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-success" type="submit">{{formTitle}}</button>
+        </div>
+    </form>
+</div>

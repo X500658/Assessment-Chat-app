@@ -1,90 +1,88 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { DatePipe } from '@angular/common';
 
 import { User } from '../types';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { sampleUsers } from '../sample_data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private usersUrl = 'api/users';  // URL to web api
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
 
   constructor(
-    private http: HttpClient,
+    private http: HttpClient
   ) { }
 
-
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   *
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      // TODO: better job of transforming error for user consumption
-      // this.log(`${operation} failed: ${error.message}`);
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  getUsers(): Observable<User[]>{
+    return this.http.get<User[]>('/api/users/')
   }
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.usersUrl)
-      .pipe(
-        catchError(this.handleError<User[]>('getUsers', []))
-      );
-  }
-  getUser(id: Number): Observable<User> {
-    const url = `${this.usersUrl}/${id}`;
-    return this.http.get<User>(url)
-      .pipe(
-        catchError(this.handleError<User>(`getUser id=${id}`))
-      );
+  getBuddies2(): User[] {
+    let buddies = sampleUsers
+    // const today = new Date();
+    buddies.forEach(buddy => {
+      buddy.last_online= new DatePipe('en-US').transform(buddy.last_online, 'YYYY-MM-dd hh:mm:ss')!
+    })
+    return buddies
   }
 
-  /** PUT: update the hero on the server */
-  updateUser(user: User): Observable<any> {
-    return this.http.put(this.usersUrl, user, this.httpOptions)
-      .pipe(
-        catchError(this.handleError<any>('updateUser'))
-      );
+  getBuddies(): User[] {
+    let buddies = sampleUsers
+    const today = new Date();
+    buddies.forEach(buddy => {
+      if(buddy.last_online==undefined){
+        buddy.last_online="Never"
+      }else{
+        buddy.last_online=new Date(buddy.last_online)
+        if (buddy.last_online && today.toDateString() === buddy.last_online.toDateString()) {
+          const duration = new Date (today.getTime() - buddy.last_online.getTime());
+          if(duration.getHours() < 24 ){
+            buddy.last_online= + duration.getHours()+" hours ago"
+          }else{
+            buddy.last_online= + duration.getMinutes()+" minutes ago"
+          }
+        }else{
+            buddy.last_online= new DatePipe('en-US').transform(buddy.last_online, 'MMM d, YYYY')!
+        }
+      }
+    })
+    return buddies
   }
 
-  /** POST: add a new hero to the server */
-  addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.usersUrl, user, this.httpOptions)
-      .pipe(
-        catchError(this.handleError<User>('addUser'))
-      );
+  getUser(id: number): User {
+    if(id==1) //hardcoded for testing
+      return this.getSelf()
+    else
+      return sampleUsers.find(user => user.id===id)!;
   }
 
-  /** DELETE: delete the hero from the server */
-  deleteUser(id: number): Observable<User> {
-    const url = `${this.usersUrl}/${id}`;
-    return this.http.delete<User>(url, this.httpOptions)
-    .pipe(
-      catchError(this.handleError<User>('deleteUser'))
-    );
+  getSelf(): User{ //current logged in user
+    return {id: 1, name:"You", password:"", pic:"", is_online:true, last_online: new Date()}
   }
 
-  /* GET heroes whose name contains search term */
-  searchUsers(term: string): Observable<User[]> {
-    if (!term.trim()) {
-      // if not search term, return empty hero array.
-      return of([]);
-    }
-    return this.http.get<User[]>(`${this.usersUrl}/?name=${term}`).pipe(
-      catchError(this.handleError<User[]>('searchUsers', []))
-    );
+  //date cleaner
+  cleaner(buddies: User[]): User[]{
+    const today = new Date();
+    buddies.forEach(buddy => {
+      if(buddy.last_online==undefined){
+        buddy.last_online="Never"
+      }else{
+        buddy.last_online=new Date(buddy.last_online)
+        if (buddy.last_online && today.toDateString() === buddy.last_online.toDateString()) {
+          const duration = new Date (today.getTime() - buddy.last_online.getTime());
+          if(duration.getHours() < 24 ){
+            buddy.last_online= + duration.getHours()+" hours ago"
+          }else{
+            buddy.last_online= + duration.getMinutes()+" minutes ago"
+          }
+        }else{
+            buddy.last_online= new DatePipe('en-US').transform(buddy.last_online, 'MMM d, YYYY')!
+        }
+      }
+    })
+    return buddies
   }
 }

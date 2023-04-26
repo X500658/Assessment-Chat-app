@@ -1,17 +1,10 @@
-import { addViewToListingRoute } from "./addViewToListing";
-import { createNewListingRoute } from "./createNewListing";
-import { deleteListingRoute } from "./deleteListing";
-import { getAllListingRoute } from "./getAllListings";
-import { getListingRoute } from "./getListing";
-import { getUserListingsRoute } from "./getUserListings";
-import { updateListingRoute } from "./updateListing";
+import { getUserByIdRoute, getUserByNameRoute, getUsersRoute } from "./getUsers";
+import { LogInRoute, SignUpRoute } from "./auth";
 
 export default [
-    getAllListingRoute,
-    getListingRoute,
-    addViewToListingRoute,
-    getUserListingsRoute,
-    createNewListingRoute,
-    updateListingRoute,
-    deleteListingRoute,
+    getUsersRoute,
+    getUserByIdRoute,
+    getUserByNameRoute,
+    LogInRoute,
+    SignUpRoute,
 ]
